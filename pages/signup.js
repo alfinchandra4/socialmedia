@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Form, Button, Message, Segment, TextArea, Divider } from 'semantic-ui-react'
+import CommonInputs from "../components/Common/CommonInputs"
 import { HeaderMessage, FooterMessage } from '../components/Common/WelcomeMessage';
 const regexUsername = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/;
 
@@ -28,12 +29,20 @@ function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
   const [formLoading, setFormLoading] = useState(false);
+  const [submitDisabled, setSubmitDisabled] = useState(true);
 
   const [username, setUsername] = useState('');
   const [usernameLoading, setUsernameLoading] = useState(false);
   const [usernameAvailable, setUsernameAvailable] = useState(false);
 
   const handleSubmit = e => e.preventDefault();
+
+  useEffect(() => {
+   const isUser = Object.values({name, email, password, bio}).every(item => Boolean(item))
+  
+    isUser ? setSubmitDisabled(false):setSubmitDisabled(true);
+
+  }, [user])
 
   return (
     <>
@@ -105,6 +114,21 @@ function Signup() {
             icon={ usernameAvailable ? "check" : "close" }
             iconPosition="left"
              />
+
+             <CommonInputs 
+              user={user} 
+              showSocialLinks={showSocialLinks} 
+              setShowSocialLinks={setShowSocialLinks} 
+              handleChange={handleChange} 
+              />
+
+              <Divider hidden />
+              <Button 
+                content="signup" 
+                type="submit" 
+                color="orange" 
+                disabled={submitDisabled || !usernameAvailable} 
+              />
 
         </Segment>
       </Form>
